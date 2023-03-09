@@ -3,8 +3,7 @@ const userForm = document.querySelector('.user-form'),
   userContainer = document.querySelector('.user-container'),
   wrapper = document.querySelector('.wrapper');
 
-let lastUpdated = null,
-  newRepos = [];
+let lastUpdated = null,result,newRepos = [];
 const getData = (user) => {
   fetch(`https://api.github.com/users/${user}`)
   .then((response) => {
@@ -25,6 +24,8 @@ const getData = (user) => {
     span.classList.add('user-error');
     span.innerText = error;
     userContainer.appendChild(span);
+    const errorSpan = document.querySelector('.user-error');
+    result = errorSpan;
   });
 }
 
@@ -87,6 +88,9 @@ userInput.addEventListener('keyup', (e) => {
     const userContent = document.querySelector('.user-content');
     if (userContent) {
       userContent.remove();
+    }
+    if (result) {
+      result.remove();
     }
     getData(user);
   }
