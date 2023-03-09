@@ -213,6 +213,18 @@ figure img {
   text-align: center;
   flex-basis: 30%;
   background-color: #2A296E;
+  cursor: pointer;
+  transition: all .5s ease;
+}
+
+.git-items a {
+  width: 100%;
+  display: block;
+  color: #fff;
+}
+
+.git-items li:hover {
+  background: #4e4cc5;
 }
 
 .follow-items span {

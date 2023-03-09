@@ -47,12 +47,13 @@ const repoData = (repo, data) => {
 }
 
 const userDetails = (repoData, data) => {
+  console.log(repoData);
   const gitItems = document.createElement('ul');
   gitItems.classList.add('git-items');
   for (let i = 0; i < repoData.length; i++) {
     if (i < 5) {
       const li = document.createElement('li');
-      li.innerHTML = `${repoData[i].name}`;
+      li.innerHTML = `<a href=${repoData[i].html_url} title=${repoData[i].name} target="_blank" rel="noopener noreferrer">${repoData[i].name}</a>`;
       gitItems.appendChild(li);
     }
   };
