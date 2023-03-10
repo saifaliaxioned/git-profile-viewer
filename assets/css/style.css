@@ -127,6 +127,10 @@ li {
   flex-direction: column;
 }
 
+.input-group {
+  position: relative;
+}
+
 .input-group input {
   padding: 15px;
   width: 100%;
@@ -139,6 +143,14 @@ li {
 }
 
 .input-group input::placeholder { color: #fff; }
+
+.input-error {
+  position: absolute;
+  bottom: -35%;
+  left: 2%;
+  color: #ff0000;
+  font-size: 12px;
+}
 
 .user-container {
   width: 80%;

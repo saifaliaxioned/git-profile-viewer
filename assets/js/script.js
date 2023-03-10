@@ -1,9 +1,10 @@
 const userForm = document.querySelector('.user-form'),
   userInput = document.querySelector('.user-input'),
-  userContainer = document.querySelector('.user-container'),
-  wrapper = document.querySelector('.wrapper');
+  inputGroup = document.querySelector('.input-group'),
+  stringPattern = /^[a-zA-Z0-9]+$/,
+  userContainer = document.querySelector('.user-container');
 
-let lastUpdated = null,result,newRepos = [];
+let lastUpdated = null,result,newRepos = [],isValid;
 const getData = (user) => {
   fetch(`https://api.github.com/users/${user}`)
   .then((response) => {
@@ -18,19 +19,7 @@ const getData = (user) => {
     }
   }).then((data) => {
     let repo = `${data.repos_url}?sort=created`;
-    repoData(repo, data);
-  }).catch((error) => {
-    const span = document.createElement('span');
-    span.classList.add('user-error');
-    span.innerText = error;
-    userContainer.appendChild(span);
-    const errorSpan = document.querySelector('.user-error');
-    result = errorSpan;
-  });
-}
-
-const repoData = (repo, data) => {
-  fetch(repo)
+    fetch(repo)
     .then((response) => { 
       if (response.status === 404) {
         throw `No profile with this username`;
@@ -44,10 +33,17 @@ const repoData = (repo, data) => {
     .catch((error) => {
       console.log(error);
     });
+  }).catch((error) => {
+    const span = document.createElement('span');
+    span.classList.add('user-error');
+    span.innerText = error;
+    userContainer.appendChild(span);
+    const errorSpan = document.querySelector('.user-error');
+    result = errorSpan;
+  });
 }
 
 const userDetails = (repoData, data) => {
-  console.log(repoData);
   const gitItems = document.createElement('ul');
   gitItems.classList.add('git-items');
   for (let i = 0; i < repoData.length; i++) {
@@ -79,12 +75,45 @@ const userDetails = (repoData, data) => {
   repoContent.appendChild(gitItems);
 };
 
+const createError = (input, err) => {
+  const inputGroup = input.parentElement;
+  const error = document.createElement('span');
+  error.classList.add('input-error');
+  error.innerText = err;
+  inputGroup.appendChild(error);
+  const userContent = document.querySelector('.user-content');
+  if (userContent) {
+    userContent.remove();
+  }
+  if (result) {
+    result.remove();
+  }
+}
+
+const validateInput = (input, pattern) => {
+  isValid = true;
+  const errorActive = document.querySelector('.input-error');
+  if (errorActive) {
+    errorActive.remove();
+  }
+  if (!input.value) {
+    createError(input, '*Field is required');
+    isValid = false;
+  } else if (!pattern.test(input.value)) {
+    createError(input, '*Space and Numbers are not allowed');
+    isValid = false;
+  }
+  return isValid;
+}
+
 userForm.addEventListener('submit', (e) => {
   e.preventDefault();
+  validateInput(userInput, stringPattern);
 });
 
 userInput.addEventListener('keyup', (e) => {
-  if (e.key == 'Enter' && userInput.value) {
+  const errorActive = document.querySelector('.input-error');
+  if (e.key == 'Enter' && userInput.value && isValid && !errorActive) {
     const user = userInput.value;
     const userContent = document.querySelector('.user-content');
     if (userContent) {
